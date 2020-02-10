@@ -1,0 +1,7 @@
+Flask
+pymongo
+flask_restful
+redis
+bs4
+marshmallow
+celery

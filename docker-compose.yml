@@ -1,0 +1,29 @@
+version: "3"
+
+services:
+  web:
+    build: "./web"
+    ports:
+    - "5000:5000"
+    links:
+      - db
+    volumes:
+    - ".:/web"
+  db:
+    image: mongo:4.2.2
+
+  redis:
+    image: redis:alpine
+#    command: redis-server
+    ports:
+      - '6379:6379'
+    volumes:
+      - "redis:/data"
+  celery:
+    build: "./web"
+    command: celery -A app.celery worker --loglevel=info
+    volumes:
+    - ".:/web"
+
+volumes:
+  redis: {}
