@@ -3,7 +3,7 @@ import requests
 from bs4 import BeautifulSoup
 from requests.exceptions import MissingSchema, InvalidURL
 
-site = 'http://www.facebook.com'
+site = 'http://www.google.com'
 
 response = requests.get(site)
 
@@ -17,6 +17,17 @@ for i, url in enumerate(urls):
         if 'http' not in url:
             url = f'{site}{url}'
 
-        response = requests.get(url)
-        f.write(response.content)
-
+        try:
+            response = requests.get(url)
+            f.write(response.content)
+        except InvalidURL:
+            temp_url = f'{site}{url}'
+            print(url)
+        except MissingSchema:
+            temp_url = f'http:{url}'
+            print(url)
+        else:
+            break
+        finally:
+            response = requests.get(temp_url)
+            f.write(response.content)

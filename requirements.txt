@@ -5,4 +5,5 @@ redis
 bs4
 marshmallow
 celery
-gunicorn
+requests
+flower
