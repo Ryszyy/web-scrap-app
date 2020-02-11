@@ -2,7 +2,7 @@ version: "3"
 
 services:
   web:
-    build: "./web"
+    build: .
     ports:
     - "5000:5000"
     links:
@@ -20,8 +20,8 @@ services:
     volumes:
       - "redis:/data"
   celery:
-    build: "./web"
-    command: celery -A app.celery worker --loglevel=info
+    build: .
+    command: celery -A web.tasks worker --loglevel=info
     volumes:
     - ".:/web"
 

@@ -5,3 +5,4 @@ redis
 bs4
 marshmallow
 celery
+gunicorn
