@@ -7,3 +7,5 @@ marshmallow
 celery
 requests
 flower
+pytest
+pytest-cov
