@@ -1,10 +1,11 @@
-from flask import jsonify, request
+from flask import request
 from marshmallow import Schema, fields
 from flask_restful import Resource
 from urllib.error import URLError
-from web.extentions import DB_WRITE_SUCCESSFUL, INPUT_ERROR, ITEM_NOT_FOUND, DB_WRITE_FAILED, PROCESSING_TASK
+from web.extentions import INPUT_ERROR, ITEM_NOT_FOUND, PROCESSING_TASK
 from web.database import get_resource, get_all_resources, get_image
 from web.tasks import get_website_text, get_website_images
+from celery import exceptions as celery_exc
 
 
 class MinimalResourcesSchema(Schema):
@@ -65,8 +66,11 @@ class WebScrap(Resource):
             else:
                 return INPUT_ERROR
 
-            if result.ready():
-                return result.get()
+            try:
+                status = result.get(timeout=1)
+            except celery_exc.TimeoutError:
+                return PROCESSING_TASK
+            return status
         except (TypeError, ValueError, URLError):
             """
             - no url provided
@@ -74,8 +78,6 @@ class WebScrap(Resource):
             - url does not exist
             """
             return INPUT_ERROR
-        else:
-            return PROCESSING_TASK
 
 
 class WebScrapImages(Resource):
@@ -83,61 +85,3 @@ class WebScrapImages(Resource):
         print(id, oid, flush=True)
         image = get_image(oid)
         return image
-
-# class WebScrapText(Resource):
-#     def post(self):
-#         request_data = request.get_json()
-#         try:
-#             url = request_data["url"]
-#             result = get_website_text.delay(url)
-#             if result.ready():
-#                 return result.get()
-#         except (TypeError, ValueError, URLError):
-#             """
-#             no url keyword
-#             wrong url format
-#             url does not exist
-#             """
-#             return INPUT_ERROR
-#         else:
-#             return PROCESSING_TASK
-#
-#
-# class WebScrapImages(Resource):
-#     def post(self):
-#         request_data = request.get_json()
-#         try:
-#             url = request_data["url"]
-#             result = get_website_text.delay(url)
-#             if result.ready():
-#                 return result.get()
-#         except (TypeError, ValueError, URLError):
-#             """
-#             no url keyword
-#             wrong url format
-#             url does not exist
-#             """
-#             return INPUT_ERROR
-#         else:
-#             return PROCESSING_TASK
-
-# @api.route('/pending')
-# class WebScrapStatus(Resource):
-#     def get(self):
-#         all_res = resources.find({"status": "Pending"})
-#         x = [{"id": x["id"], "url":x["url"], "status": x["status"]} for x in all_res]
-#         return x
-
-
-
-    # def put(self, ids=None):
-    #     requested_data = request.get_json()
-    #     try:
-    #         res = get_resource(ids)
-    #         if res is None:
-    #             return ITEM_NOT_FOUND
-    #
-    #         # res.update(**requested_data)
-    #         return DB_WRITE_SUCCESSFUL
-    #     except TypeError:
-    #         return DB_WRITE_FAILED

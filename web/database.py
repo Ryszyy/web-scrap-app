@@ -5,7 +5,7 @@ from web.extentions import DB_WRITE_SUCCESSFUL, ITEM_EXIST_IN_DB
 
 
 client = MongoClient('mongodb://db:27017/sem')
-db = client.WebScrap7
+db = client.WebScrap
 resources = db["resources"]
 fs = GridFS(db)
 
@@ -62,7 +62,7 @@ def add_text_to_resource(url: str, text: str):
         update_resource(url, "text", text)
     else:
         create_resource(url, text=text)
-    return None
+    return DB_WRITE_SUCCESSFUL
 
 
 def add_images_to_resource(url: str, images: list):
@@ -82,7 +82,7 @@ def add_images_to_resource(url: str, images: list):
     else:
         links = save_images(images)
         create_resource(url, images=links)
-    return None
+    return DB_WRITE_SUCCESSFUL
 
 
 def create_resource(url, text=None, images=None):
@@ -93,7 +93,6 @@ def create_resource(url, text=None, images=None):
             "text": text,
             "images": images
         })
-    return None
 
 
 def save_images(images: list):
@@ -105,6 +104,4 @@ def save_images(images: list):
 
 
 def get_image(oid: str):
-
     return fs.get(ObjectId(oid)).read()
-    # return resources.find_one({"_id": oid})

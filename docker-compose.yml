@@ -25,9 +25,12 @@ services:
     - ".:/web"
   flower:
     image: mher/flower
-    command: ["flower", "--broker=redis://redis:6379/0", "--port=8888"]
+    command: ["flower", "--broker=redis://redis:6379/0", "--port=8888", "--inspect_timeout 10"]
+#    command: ["flower", "--broker=redis://redis:6379/0", "--port=8888", "--persistent=true", "--inspect_timeout 10"]
     ports:
       - 8888:8888
+    depends_on:
+      - redis
 
 volumes:
   redis: {}

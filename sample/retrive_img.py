@@ -16,18 +16,6 @@ for i, url in enumerate(urls):
     with open(str(i), 'wb+') as f:
         if 'http' not in url:
             url = f'{site}{url}'
-
-        try:
             response = requests.get(url)
             f.write(response.content)
-        except InvalidURL:
-            temp_url = f'{site}{url}'
-            print(url)
-        except MissingSchema:
-            temp_url = f'http:{url}'
-            print(url)
-        else:
-            break
-        finally:
-            response = requests.get(temp_url)
-            f.write(response.content)
+
