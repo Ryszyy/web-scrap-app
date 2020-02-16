@@ -29,14 +29,14 @@ class TestResources(object):
 
     def test_post_resource(self, client):
         rv = client.post('/api/resources', json={
-            'url': 'www.semantive.com', 'type': 'text'
+            'url': 'www.google.com', 'type': 'text'
         })
         json_data = rv.get_json()
         assert json_data["status_code"] == 102 or json_data["status_code"] == 200
 
     def test_post_resource_image(self, client):
         rv = client.post('/api/resources', json={
-            'url': 'www.semantive.com', 'type': 'images'
+            'url': 'www.google.com', 'type': 'images'
         })
         json_data = rv.get_json()
         assert json_data["status_code"] == 102 or json_data["status_code"] == 200

@@ -36,12 +36,12 @@ class WebScrap(Resource):
         :param ids: id of resource
         :return: single resource if ids is provided, else return all resources
         """
-        try:
+        if ids is not None:
             res = get_resource(ids)
             ret = schema.dump(res)
             if res is None:
                 return ITEM_NOT_FOUND
-        except TypeError:
+        else:
             res = get_all_resources()
             ret = [schema.dump(x) for x in res]
         return ret
