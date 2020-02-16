@@ -1,3 +1,5 @@
+## Web Scrap web service
+
 ### To run application:
 Build containers:  
 ```
@@ -25,15 +27,9 @@ Application is based on:
 - Celery
 - Redis   
 - Flower   
-More in requirements.
 
-#### What went good:  
-- Factory patterns for celery, flask app
-- Integration celery with flask
-- Read/Writes from/to DB
-- scalability of the project
-- Virtualization of the project
-##### What needs improvements/implementations:   
+##### What needs additional implementations:   
 - Tests needs setUp tearDown functions
 - Tests needs separate DB
 - Downloading images needs links to DB
+- Support for https
